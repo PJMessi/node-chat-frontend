@@ -37,7 +37,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
   body {
     margin-top: 20px;
   }
@@ -53,7 +53,7 @@ export default {
   .chat-messages {
     display: flex;
     flex-direction: column;
-    max-height: 800px;
+    max-height: 700px;
     overflow-y: scroll;
   }
 
