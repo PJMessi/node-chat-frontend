@@ -3,20 +3,63 @@
     <form class="form-signin">
       <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
       <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+      <input v-model="credential.email" type="email" id="inputEmail" class="form-control" :class="{'is-invalid': authErrorMessage != ''}" placeholder="Email address" required autofocus>
+
       <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <input v-model="credential.password" type="password" id="inputPassword" class="form-control" :class="{'is-invalid': authErrorMessage != ''}" placeholder="Password" required>
+
+      <!-- <div class="checkbox mb-3">
+        <label><input type="checkbox" value="remember-me"> Remember me </label>
+      </div> -->
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit" @click.prevent="login(credential)">
+        <i v-if="authStatus=='loading'" class="fas fa-circle-notch" :class="{'fa-spin': authStatus=='loading'}"></i>
+        <span v-else>Sign in</span>
+      </button>
       <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
     </form>
   </div>
 </template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
+export default {
+
+  created() {
+    if (this.isLoggedIn) {
+      this.$router.push('/')
+    }
+  },
+
+  data() {
+    return {
+      credential: {
+        email: 'pjmessi25@gmail.com',
+        password: 'password'
+      }
+    }
+  },
+
+  watch: {
+    isLoggedIn: function(newValue, oldValue) {
+      if (newValue) {
+        this.$router.push('/')
+      }
+    }
+  },
+  
+  computed: {
+    ...mapGetters(['isLoggedIn', 'authStatus', 'authErrorMessage'])
+  },
+
+  methods: {
+    ...mapActions(['login'])
+  }
+
+}
+</script>
 
 <style scoped>
   html,
