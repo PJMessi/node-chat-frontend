@@ -15,7 +15,7 @@
               <MessageList/>
 
               <div class="flex-grow-0 py-3 px-4 border-top">
-                <MessageCompose/>
+                <MessageCompose :socket="socket"/>
               </div>
             </div>
           </div>
@@ -29,9 +29,41 @@
 import Contact from '@/components/Contact';
 import MessageList from '@/components/MessageList';
 import MessageCompose from '@/components/MessageCompose';
+import io from 'socket.io-client';
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  components: { Contact, MessageList, MessageCompose }
+  components: { Contact, MessageList, MessageCompose },
+
+  computed: {
+    ...mapGetters(['authToken', 'isLoggedIn'])
+  },
+
+  created() {
+    if (!this.isLoggedIn) this.$router.push('/login');
+
+    this.socket = io('http://127.0.0.1:5000/', {
+      query: {
+        token: this.authToken
+      }
+    });
+
+    const vm = this;
+    this.socket.on('chat-message', function (message) {
+      vm.insertMessage(message);
+    })
+
+  },
+
+  data() {
+    return {
+      socket: {}
+    }
+  },
+
+  methods: {
+    ...mapActions(['insertMessage'])
+  }
 };
 
 </script>
