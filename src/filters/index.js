@@ -6,3 +6,9 @@ Vue.filter('chat-time', (value) => {
 
     return moment(value).format('h:mm a')
 })
+
+Vue.filter('lowercase', (value) => {
+    if (!value) return value
+
+    return value.toLowerCase()
+})

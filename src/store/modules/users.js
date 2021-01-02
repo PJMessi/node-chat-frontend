@@ -1,8 +1,9 @@
-import axios from 'axios'
+import axios from 'axios';
+import Vue from 'vue';
 
 const state = {
-    // contains the users along with pagination data.
-    paginatedData: {rows: []},
+    // contains the list of users.
+    users: [],
 
     // determines if the users list is being updated.
     loading: false,
@@ -16,7 +17,7 @@ const state = {
 
 const getters = {
     // returns the list of users.
-    usersList: state => state.paginatedData.rows,
+    usersList: state => state.users,
 
     // returns true if the users list is being updated.
     usersListBeingUpdated: state => state.loading
@@ -47,11 +48,37 @@ const actions = {
         } finally {
             commit('updateUserLoadingStatus', false)
         }
+    },
+
+    /**
+     * Updates the status of the user, if the user is in the paginated list.
+     * @param {*} param0 
+     * @param {*} param1 
+     */
+    updateUserStatus: ({ commit }, { uuid, status }) => {
+        commit('updateUserStatus', { uuid, status })
     }
 
 }
 
 const mutations = {
+
+    /**
+     * Updates the status of the user, if the user is in the paginated list.
+     * @param {*} state 
+     * @param {*} newStatus 
+     */
+    updateUserStatus: (state, { uuid, status }) => {
+        let updatedUsersList = state.users.map(user => {
+            if (user.uuid == uuid) {
+                user.status = status;
+            }
+            return user;
+        })
+
+        Vue.set(state, 'users', updatedUsersList )
+
+    },
 
     /**
      * Updates the loading status with new value.
@@ -63,12 +90,12 @@ const mutations = {
     },
 
     /**
-     * Updates the paginated user data with new value.
+     * Updates the users list with new value.
      * @param {*} state 
      * @param {*} data 
      */
     updatePaginatedUserData: (state, data) => {
-        state.paginatedData = data
+        state.users = data
     }
 }
 

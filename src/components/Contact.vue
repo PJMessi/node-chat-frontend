@@ -13,7 +13,7 @@
     </div> -->
 
     <a v-for="user in otherUsers" :key="user.uuid" href="#" class="list-group-item list-group-item-action border-0">
-      <div class="badge bg-success float-right">5</div>
+      <!-- <div class="badge bg-success float-right">5</div> -->
       <div class="d-flex align-items-start">
         <img
           src="https://bootdey.com/img/Content/avatar/avatar5.png"
@@ -25,7 +25,8 @@
         <div class="flex-grow-1 ml-3">
           {{user.name}}
           <div class="small">
-            <span class="fas fa-circle chat-online"></span> Online
+            <span class="fas fa-circle" :class="{'chat-offline': user.status == 'INACTIVE', 'chat-online': user.status == 'ACTIVE'}"></span> 
+            {{ user.status | lowercase }}
           </div>
         </div>
       </div>
@@ -42,6 +43,8 @@ export default {
   created() {
     this.fetchUsers();
   },
+
+
 
   computed: {
     ...mapGetters(['usersList', 'authUser']),

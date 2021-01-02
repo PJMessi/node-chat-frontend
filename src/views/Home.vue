@@ -12,7 +12,7 @@
 
             <div class="col-12 col-lg-7 col-xl-9">
               
-              <MessageList/>
+              <MessageList :socket="socket"/>
 
               <div class="flex-grow-0 py-3 px-4 border-top">
                 <MessageCompose :socket="socket"/>
@@ -49,8 +49,13 @@ export default {
     });
 
     const vm = this;
+
     this.socket.on('chat-message', function (message) {
       vm.insertMessage(message);
+    })
+
+    this.socket.on('user-status-change', function (user) {
+      vm.updateUserStatus({ uuid: user.uuid, status: user.status });
     })
 
   },
@@ -62,7 +67,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['insertMessage'])
+    ...mapActions(['insertMessage', 'updateUserStatus'])
   }
 };
 

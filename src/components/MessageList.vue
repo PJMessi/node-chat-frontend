@@ -25,7 +25,7 @@
 
     <div class="position-relative bottom-of-the-chat">
       <div class="chat-messages p-4" ref="messagesContainer">
-        <div v-for="message in messagesList" :key="message.uui" :class="message.user.uuid == authUser.uuid ? 'chat-message-right' : 'chat-message-left'" class="pb-4">
+        <div v-for="message in messagesList" :key="message.uuid" :class="message.user.uuid == authUser.uuid ? 'chat-message-right' : 'chat-message-left'" class="pb-4">
           <div>
             <img
               src="https://bootdey.com/img/Content/avatar/avatar1.png"
@@ -42,7 +42,7 @@
             <div class="font-weight-bold mb-1">{{ message.user.uuid == authUser.uuid ? 'You' : message.user.name}}</div>
             {{message.content}}
           </div>
-        </div>   
+        </div>  
       </div>
     </div>
   </div>
@@ -52,6 +52,8 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+
+  props: ['socket'],
 
   created() {
     this.fetchMessages()
@@ -64,6 +66,7 @@ export default {
      */
     isLoggedIn: function(newValue, oldValue) {
       if (!newValue) {
+        this.socket.disconnect()
         this.$router.push('/login')
       }
     },
